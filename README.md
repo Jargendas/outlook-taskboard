@@ -41,7 +41,7 @@ The taskboard can also be opened in Internet Explorer. Due to limitations with A
 
 ## Basic Setup
 
-First, download the latest release zip file and extract it to a folder in your local hard drive or clone this repository.
+First, download the [latest release zip file](https://github.com/maltehi/outlook-taskboard/archive/master.zip) and extract it to a folder in your local hard drive or clone this repository.
 
 The further setup depends on how you want to use the taskboard. While the solution based on Outlook Folder Home Page is conveniently integrated with Outlook, new Outlook versions only support Home Pages for the root folder of each account, if at all. Additionally, performance and compatibility e.g. with high-resolution displays are suboptimal. The Internet Explorer solution handles these better. Both solutions can also be used in parallel.
 
