@@ -2,10 +2,7 @@
 
 Outlook Taskboard is a Kanban board style view for Outlook Tasks.
 
-*The following README is adapted from the __original version__ from evrenvarol, so some
-modifications have been made to adapt it to the current version of the taskboard. There might still be some changes that went unnoticed.*
-
-*The __Fork__ sections at the end of this README list the changes made by the respective forks.*
+*The __Fork__ sections at the end of this README list the changes made by the respective forks since the original version by evrenvarol.*
 
 There are 2 ways to use the taskboard:
 
@@ -41,17 +38,15 @@ The taskboard can also be opened in Internet Explorer. Due to limitations with A
 
 ## Basic Setup
 
-First, download the [latest release zip file](https://github.com/maltehi/outlook-taskboard/archive/master.zip) and extract it to a folder in your local hard drive or clone this repository.
+First, download the [latest release zip file](https://github.com/maltehi/outlook-taskboard/archive/master.zip) and extract it to a folder in your local hard drive or [clone this repository](https://github.com/maltehi/outlook-taskboard.git) using Git.
 
 The further setup depends on how you want to use the taskboard. While the solution based on Outlook Folder Home Page is conveniently integrated with Outlook, new Outlook versions only support Home Pages for the root folder of each account, if at all. Additionally, performance and compatibility e.g. with high-resolution displays are suboptimal. The Internet Explorer solution handles these better. Both solutions can also be used in parallel.
 
 ### For Outlook Home page:
 
-  * ~~Create another folder (of any type) and name it something like "Taskboard" or "Kanban", etc.~~ (Alternatively you can use the main account folder as a home page as well.)
+  * Right-click the your Outlook account's __root folder__. This should be named like the account (e.g. your email address) and be visible in Outlook's __Email view__ or __Folder view__ (not in the Tasks view). Click on **Properties** (last entry in the context menu). Select the *Home Page* tab in the Properties dialog box.
 
-    *The feature to define home pages on any folder, which the next steps are based on, was __removed__ from Outlook at some point. Depending on your Outlook version, and potentially your Exchange Server and Group Policy settings, this might still be enabled for all folders, or only for the __main account folder__, though. The latter should be named like your email account (e.g. your email address) and be visible in Outlook's __Email view__ or __Folder view__ (not in the Tasks view). Continue with the following steps on this folder, or if nothing else works, use the Internet Explorer approach described below.*
-
-  * Right-click the folder, and then click **Properties**. Select the *Home Page* tab in the <folder name> Properties dialog box.
+    *The feature to define home pages not only on the root folder, but on any deliberate folder was supported once, but then __removed__ from Outlook at some point. Depending on your Outlook version, and potentially your Exchange Server and Group Policy settings, this might still be enabled.*
 
   * In the *Address box*, browse to the folder you have just extracted the Taskboard files and select the **kanban.html** file.
 
@@ -61,7 +56,7 @@ The further setup depends on how you want to use the taskboard. While the soluti
 
       *If you receive above warning, simply close it and close the Properties window using the 'X' icon.*
 
-  * Now the taskboard should open in the main window when **clicking on the folder**.
+  * Now the taskboard should open in the main window when **clicking on the root folder**.
 
 ### For Internet Explorer:
 
@@ -173,7 +168,7 @@ Credit for this fork goes entirely to @evrenvarol. I have made a few simple chan
 5. Columns are no-longer drag and drop. Tasks move from column to column with the Outlook task status.
 5.a. Must add and use a category of !Next to move a task to the appropriate column.
 
-## Fork 2: [janvv - Outlook Taskboard aka **JanBan**](https://github.com/janvv/janban)
+## Fork 2: janvv - Outlook Taskboard aka **JanBan** *(Deleted)*
 
 I found the original Kanban board implemented by Evren Varol. I looked at the forks and liked the
 changes by BillyMcSkintos, using the task status instead of folders. But he lost the drag&drop
@@ -217,3 +212,6 @@ My changes:
 3. Apply display filters on status reports, too (optional).
 4. Tasks are sorted into lanes by their status (as in BillyMcSkintos' fork). Drag & Drop between lanes is enabled and alters the task status.
 5. Having the tasks for all lanes in a common folder, e.g. the main Tasks folder, is possible (and recommended). Archive folder is still separate.
+6. Colored footings according to task category.
+7. Multi-project support.
+8. Many small changes...
