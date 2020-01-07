@@ -65,6 +65,8 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
             });
         }
 
+        $scope.dragged = false;
+
         $scope.usePrivate = $scope.config.PRIVACY_FILTER;
         $scope.useCategoryColors = $scope.config.USE_CATEGORY_COLORS;
         $scope.useCategoryColorFooters = $scope.config.USE_CATEGORY_COLOR_FOOTERS;
@@ -135,11 +137,13 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
 
                     // set new status, if different
                     if (taskitem.Status != newstatus) {
+                        $scope.dragged = true;
                         taskitem.Status = newstatus;
                         taskitem.Save();
                         itemChanged = true;
                         ui.item.sortable.model.status = taskStatus(newstatus);
                         ui.item.sortable.model.completeddate = new Date(taskitem.DateCompleted)
+                        $scope.dragged = false;
                     }
 
                     // ensure the task is not moving into same folder
@@ -235,9 +239,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
             
             if ($scope.config.AUTO_UPDATE) {
                 // bind to taskitem AfterWrite event on outlook and reload the page after the task is saved
-                eval("function task::AfterWrite (bStat) {window.location.reload(); return true;}");
-                // bind to taskitem BeforeDelete event on outlook and reload the page after the task is deleted
-                eval("function task::BeforeDelete (bStat) {window.location.reload(); return true;}");
+                eval("function task::AfterWrite (bStat) {if (!$scope.dragged) {window.location.reload();} return true;}");
             };
 
             switch(task.Class) {
@@ -983,8 +985,6 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
         if ($scope.config.AUTO_UPDATE) {
             // bind to taskitem AfterWrite event on outlook and reload the page after the task is saved
             eval("function taskitem::AfterWrite (bStat) {window.location.reload(); return true;}");
-            // bind to taskitem BeforeDelete event on outlook and reload the page after the task is deleted
-            eval("function taskitem::BeforeDelete (bStat) {window.location.reload(); return true;}");
         }
 
         // for anyone wondering about this weird double colon syntax:
@@ -1003,6 +1003,10 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
     $scope.editTask = function (item) {
         var taskitem = outlookNS.GetItemFromID(item.entryID);
         taskitem.Display();
+        if ($scope.config.AUTO_UPDATE) {
+            // bind to taskitem beforedelete event on outlook and reload the page after the task is deleted
+            eval("function taskitem::BeforeDelete (bStat) {window.location.reload(); return true;}");
+        }
     };
 
     // deletes the task item in both outlook and model data
