@@ -232,6 +232,13 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
         var count = tasks.Count;
         for (i = 1; i <= count; i++) {
             var task = tasks(i);
+            
+            if ($scope.config.AUTO_UPDATE) {
+                // bind to taskitem AfterWrite event on outlook and reload the page after the task is saved
+                eval("function task::AfterWrite (bStat) {window.location.reload(); return true;}");
+                // bind to taskitem BeforeDelete event on outlook and reload the page after the task is deleted
+                eval("function task::BeforeDelete (bStat) {window.location.reload(); return true;}");
+            };
 
             switch(task.Class) {
                 // Task object
@@ -974,8 +981,10 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
         taskitem.Display();
 
         if ($scope.config.AUTO_UPDATE) {
-            // bind to taskitem write event on outlook and reload the page after the task is saved
-            eval("function taskitem::Write (bStat) {window.location.reload();  return true;}");
+            // bind to taskitem AfterWrite event on outlook and reload the page after the task is saved
+            eval("function taskitem::AfterWrite (bStat) {window.location.reload(); return true;}");
+            // bind to taskitem BeforeDelete event on outlook and reload the page after the task is deleted
+            eval("function taskitem::BeforeDelete (bStat) {window.location.reload(); return true;}");
         }
 
         // for anyone wondering about this weird double colon syntax:
@@ -984,6 +993,9 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
         //(https://msdn.microsoft.com/en-us/library/ms974564.aspx?f=255&MSPPError=-2147217396)
         //
         // by using eval we can avoid any error message until it is actually executed by Microsofts scripting engine
+
+        // To Do: Replace complete reload (window.location.reload()) by more efficient and
+        // breakage-free way to update board view, such as $scope.initTasks, which however cannot be called at this point.
     }
 
     // opens up task item in outlook
@@ -991,12 +1003,6 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
     $scope.editTask = function (item) {
         var taskitem = outlookNS.GetItemFromID(item.entryID);
         taskitem.Display();
-        if ($scope.config.AUTO_UPDATE) {
-            // bind to taskitem write event on outlook and reload the page after the task is saved
-            eval("function taskitem::Write (bStat) {window.location.reload(); return true;}");
-            // bind to taskitem beforedelete event on outlook and reload the page after the task is deleted
-            eval("function taskitem::BeforeDelete (bStat) {window.location.reload(); return true;}");
-        }
     };
 
     // deletes the task item in both outlook and model data
@@ -1113,8 +1119,8 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
         var configItems = folder.Items.Restrict('[Subject] = ' + $scope.configName);
         var configItem = configItems(1);
         configItem.Display();
-        // bind to taskitem write event on outlook and reload the page after the task is saved
-        eval("function configItem::Write (bStat) {window.location.reload(); return true;}");
+        // bind to configItem AfterWrite event on outlook and reload the page after the task is saved
+        eval("function configItem::AfterWrite (bStat) {window.location.reload(); return true;}");
     }
 
     $scope.makeDefaultConfig = function () {
