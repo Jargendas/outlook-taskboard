@@ -63,7 +63,7 @@
             <!-- backlog lane -->
             <div ng-if="( config.BACKLOG_FOLDER.ACTIVE )" class="tasklane col-md-3 col-sm-4 col-xs-6" ng-class=" { 'col-lg-100' : numfolders === 1, 'col-lg-50' : numfolders === 2, 'col-lg-33' : numfolders === 3, 'col-lg-25': numfolders === 4, 'col-lg-20': numfolders === 5 }">
                 <div class="panel panel-default">
-                    <header class="panel-heading">
+                    <header class="lane-header">
                         <h5>{{ config.BACKLOG_FOLDER.TITLE }}
                             <span class="pull-right">
                                 <button class="btn btn-default btn-xs" aria-label="Add" type="button" ng-click="addTask('backlog');"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
@@ -109,7 +109,7 @@
             <!-- next lane -->
             <div ng-if="( config.NEXT_FOLDER.ACTIVE )" class="tasklane col-md-3 col-sm-4 col-xs-6" ng-class=" { 'col-lg-100' : numfolders === 1, 'col-lg-50' : numfolders === 2, 'col-lg-33' : numfolders === 3, 'col-lg-25': numfolders === 4, 'col-lg-20': numfolders === 5 }">
                 <div class="panel panel-default">
-                    <header class="panel-heading">
+                    <header class="lane-header">
                         <h5>{{ config.NEXT_FOLDER.TITLE }}
                             <span class="pull-right">
                                 <button ng-if="( config.NEXT_FOLDER.LIMIT == 0 || nextTasks.length < config.NEXT_FOLDER.LIMIT )" class="btn btn-default btn-xs" aria-label="Add" type="button" ng-click="addTask('next');"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
@@ -155,7 +155,7 @@
             <!-- inprogress lane -->
             <div ng-if="( config.INPROGRESS_FOLDER.ACTIVE )" class="tasklane col-md-3 col-sm-4 col-xs-6" ng-class=" { 'col-lg-100' : numfolders === 1, 'col-lg-50' : numfolders === 2, 'col-lg-33' : numfolders === 3, 'col-lg-25': numfolders === 4, 'col-lg-20': numfolders === 5 }">
                 <div class="panel panel-default">
-                    <header class="panel-heading">
+                    <header class="lane-header">
                         <h5>{{ config.INPROGRESS_FOLDER.TITLE }}
                             <span class="pull-right">
                                 <button ng-if="( config.INPROGRESS_FOLDER.LIMIT == 0 || inprogressTasks.length < config.INPROGRESS_FOLDER.LIMIT )" class="btn btn-default btn-xs" aria-label="Add" type="button" ng-click="addTask('inprogress');"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
@@ -205,7 +205,7 @@
             <!-- waiting lane -->
             <div ng-if="( config.WAITING_FOLDER.ACTIVE )" class="tasklane col-md-3 col-sm-4 col-xs-6" ng-class=" { 'col-lg-100' : numfolders === 1, 'col-lg-50' : numfolders === 2, 'col-lg-33' : numfolders === 3, 'col-lg-25': numfolders === 4, 'col-lg-20': numfolders === 5 }">
                 <div class="panel panel-default">
-                    <header class="panel-heading">
+                    <header class="lane-header">
                         <h5>{{ config.WAITING_FOLDER.TITLE }}
                             <span class="pull-right">
                                 <button ng-if="( config.WAITING_FOLDER.LIMIT == 0 || waitingTasks.length < config.WAITING_FOLDER.LIMIT )" class="btn btn-default btn-xs" aria-label="Add" type="button" ng-click="addTask('waiting');"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
@@ -252,7 +252,7 @@
             <!-- completed lane -->
             <div ng-if="( config.COMPLETED_FOLDER.ACTIVE )" class="tasklane col-md-3 col-sm-4 col-xs-6" ng-class=" { 'col-lg-100' : numfolders === 1, 'col-lg-50' : numfolders === 2, 'col-lg-33' : numfolders === 3, 'col-lg-25': numfolders === 4, 'col-lg-20': numfolders === 5 }">
                 <div class="panel panel-default">
-                    <header class="panel-heading">
+                    <header class="lane-header">
                         <h5>{{ config.COMPLETED_FOLDER.TITLE }}
                             <span class="pull-right">
                                 <span class="label label-info">{{ completedTasks.length }}</span>
