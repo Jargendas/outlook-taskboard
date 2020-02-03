@@ -767,6 +767,8 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
         mailBody += "<tr><td>STATUS</td><td>The values and descriptions for the task statuses. The text can be changed for the status report</td></tr>";
         mailBody += "<tr><td>COMPLETED</td><td>Define what to do with completed tasks after x days: NONE, HIDE, ARCHIVE or DELETE</td></tr>";
         mailBody += "<tr><td>AUTO_UPDATE</td><td>if true, then the board is updated immediately after adding or deleting tasks</td></tr>";
+        mailBody += "<tr><td>AUTO_START_TASKS</td><td>When true, then tasks that have start date today or earlier will be moved to the NEXT lane automatically.</td></tr>";
+        mailBody += "<tr><td>DARK_MODE</td><td>Adapt the color scheme of the Taskboard to Outlook 2016's dark scheme.</td></tr>";
         mailBody += "</table>";
         mailBody += "</body>"
         mailItem.HTMLBody = mailBody;
@@ -950,7 +952,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
             str = str.substring(0, str.lastIndexOf(' ', limit));
             if (limit != 0) { str = str + " [...]" }
         };
-        
+
         if ($scope.config.EXCERPT_PARSE) {
             var index = 0;
             // Replace all occurences of [] and [X]/[x] with checkboxes
@@ -960,7 +962,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
                     returnString += ' checked';
                 }
                 returnString += '>&nbsp;';
-                return  returnString;
+                return returnString;
             });
 
             // Remove empty lines and spaces at beginning and end
@@ -1295,8 +1297,8 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
                 "ACTION": "ARCHIVE"
             },
             "AUTO_UPDATE": true,
-            "AUTO_START_TASKS": false
-
+            "AUTO_START_TASKS": false,
+            "DARK_MODE": false
         };
     }
 });
