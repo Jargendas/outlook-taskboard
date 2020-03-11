@@ -22,7 +22,7 @@
 </head>
 
 <!-- Pass a unique string to the init() function below to address independent configurations! -->
-<body ng-controller="taskboardController" ng-init="init('')">
+<body ng-controller="taskboardController" ng-init="init('')" class="dark">
 
     <div class="taskboard container-fluid">
 
@@ -61,9 +61,9 @@
         <section class="row">
 
             <!-- backlog lane -->
-            <div ng-if="( config.BACKLOG_FOLDER.ACTIVE )" class="tasklane col-md-3 col-sm-4 col-xs-6" ng-class=" { 'col-lg-100' : numfolders === 1, 'col-lg-50' : numfolders === 2, 'col-lg-33' : numfolders === 3, 'col-lg-25': numfolders === 4, 'col-lg-20': numfolders === 5 }">
-                <div class="panel panel-default">
-                    <header class="lane-header">
+            <div ng-if="( config.BACKLOG_FOLDER.ACTIVE )" class="tasklane col-md-3 col-sm-4 col-xs-6 dark" ng-class=" { 'col-lg-100' : numfolders === 1, 'col-lg-50' : numfolders === 2, 'col-lg-33' : numfolders === 3, 'col-lg-25': numfolders === 4, 'col-lg-20': numfolders === 5 }">
+                <div class="panel panel-default dark">
+                    <header class="lane-header dark">
                         <h5>{{ config.BACKLOG_FOLDER.TITLE }}
                             <span class="pull-right">
                                 <button class="btn btn-default btn-xs" aria-label="Add" type="button" ng-click="addTask('backlog');"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
@@ -71,7 +71,7 @@
                             </span>
                         </h5>
                     </header>
-                    <ul id="backlogList" ui-sortable="sortableOptions" ng-model="filteredBacklogTasks" class="panel-body tasklist list-unstyled">
+                    <ul id="backlogList" ui-sortable="sortableOptions" ng-model="filteredBacklogTasks" class="panel-body tasklist dark list-unstyled">
                         <li ng-repeat="task in filteredBacklogTasks" class="task panel" ng-class=" { 'task-low' : task.priority === 0, 'task-medium' : task.priority === 1, 'task-high' : task.priority === 2, 'task-private': task.sensitivity === 2 }"
                             ng-dblclick="editTask(task)">
                             <header class="panel-heading">
@@ -107,9 +107,9 @@
 
 
             <!-- next lane -->
-            <div ng-if="( config.NEXT_FOLDER.ACTIVE )" class="tasklane col-md-3 col-sm-4 col-xs-6" ng-class=" { 'col-lg-100' : numfolders === 1, 'col-lg-50' : numfolders === 2, 'col-lg-33' : numfolders === 3, 'col-lg-25': numfolders === 4, 'col-lg-20': numfolders === 5 }">
-                <div class="panel panel-default">
-                    <header class="lane-header">
+            <div ng-if="( config.NEXT_FOLDER.ACTIVE )" class="tasklane col-md-3 col-sm-4 col-xs-6 dark" ng-class=" { 'col-lg-100' : numfolders === 1, 'col-lg-50' : numfolders === 2, 'col-lg-33' : numfolders === 3, 'col-lg-25': numfolders === 4, 'col-lg-20': numfolders === 5 }">
+                <div class="panel panel-default dark">
+                    <header class="lane-header dark">
                         <h5>{{ config.NEXT_FOLDER.TITLE }}
                             <span class="pull-right">
                                 <button ng-if="( config.NEXT_FOLDER.LIMIT == 0 || nextTasks.length < config.NEXT_FOLDER.LIMIT )" class="btn btn-default btn-xs" aria-label="Add" type="button" ng-click="addTask('next');"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
@@ -118,7 +118,7 @@
                             </span>
                         </h5>
                     </header>
-                    <ul id="nextList" ui-sortable="sortableOptions" ng-model="filteredNextTasks" class="panel-body tasklist list-unstyled">
+                    <ul id="nextList" ui-sortable="sortableOptions" ng-model="filteredNextTasks" class="panel-body tasklist dark list-unstyled">
                         <li ng-repeat="task in filteredNextTasks" class="task panel" ng-class=" { 'task-low' : task.priority === 0, 'task-medium' : task.priority === 1, 'task-high' : task.priority === 2, 'task-private': task.sensitivity === 2 }"
                             ng-dblclick="editTask(task)">
                             <header class="panel-heading">
@@ -153,9 +153,9 @@
             <!-- next lane -->
 
             <!-- inprogress lane -->
-            <div ng-if="( config.INPROGRESS_FOLDER.ACTIVE )" class="tasklane col-md-3 col-sm-4 col-xs-6" ng-class=" { 'col-lg-100' : numfolders === 1, 'col-lg-50' : numfolders === 2, 'col-lg-33' : numfolders === 3, 'col-lg-25': numfolders === 4, 'col-lg-20': numfolders === 5 }">
-                <div class="panel panel-default">
-                    <header class="lane-header">
+            <div ng-if="( config.INPROGRESS_FOLDER.ACTIVE )" class="tasklane col-md-3 col-sm-4 col-xs-6 dark" ng-class=" { 'col-lg-100' : numfolders === 1, 'col-lg-50' : numfolders === 2, 'col-lg-33' : numfolders === 3, 'col-lg-25': numfolders === 4, 'col-lg-20': numfolders === 5 }">
+                <div class="panel panel-default dark">
+                    <header class="lane-header dark">
                         <h5>{{ config.INPROGRESS_FOLDER.TITLE }}
                             <span class="pull-right">
                                 <button ng-if="( config.INPROGRESS_FOLDER.LIMIT == 0 || inprogressTasks.length < config.INPROGRESS_FOLDER.LIMIT )" class="btn btn-default btn-xs" aria-label="Add" type="button" ng-click="addTask('inprogress');"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
@@ -164,7 +164,7 @@
                             </span>
                         </h5>
                     </header>
-                    <ul id="inprogressList" ui-sortable="sortableOptions" ng-model="filteredInprogressTasks" class="panel-body tasklist list-unstyled">
+                    <ul id="inprogressList" ui-sortable="sortableOptions" ng-model="filteredInprogressTasks" class="panel-body tasklist dark list-unstyled">
                         <li ng-repeat="task in filteredInprogressTasks" class="task panel" ng-class=" { 'task-low' : task.priority === 0, 'task-medium' : task.priority === 1, 'task-high' : task.priority === 2, 'task-private': task.sensitivity === 2 }"
                             ng-dblclick="editTask(task)">
                             <header class="panel-heading">
@@ -203,9 +203,9 @@
             <div class="clearfix visible-sm-block"></div>
 
             <!-- waiting lane -->
-            <div ng-if="( config.WAITING_FOLDER.ACTIVE )" class="tasklane col-md-3 col-sm-4 col-xs-6" ng-class=" { 'col-lg-100' : numfolders === 1, 'col-lg-50' : numfolders === 2, 'col-lg-33' : numfolders === 3, 'col-lg-25': numfolders === 4, 'col-lg-20': numfolders === 5 }">
-                <div class="panel panel-default">
-                    <header class="lane-header">
+            <div ng-if="( config.WAITING_FOLDER.ACTIVE )" class="tasklane col-md-3 col-sm-4 col-xs-6 dark" ng-class=" { 'col-lg-100' : numfolders === 1, 'col-lg-50' : numfolders === 2, 'col-lg-33' : numfolders === 3, 'col-lg-25': numfolders === 4, 'col-lg-20': numfolders === 5 }">
+                <div class="panel panel-default dark">
+                    <header class="lane-header dark">
                         <h5>{{ config.WAITING_FOLDER.TITLE }}
                             <span class="pull-right">
                                 <button ng-if="( config.WAITING_FOLDER.LIMIT == 0 || waitingTasks.length < config.WAITING_FOLDER.LIMIT )" class="btn btn-default btn-xs" aria-label="Add" type="button" ng-click="addTask('waiting');"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
@@ -214,7 +214,7 @@
                             </span>
                         </h5>
                     </header>
-                    <ul id="waitingList" ui-sortable="sortableOptions" ng-model="filteredWaitingTasks" class="panel-body tasklist list-unstyled">
+                    <ul id="waitingList" ui-sortable="sortableOptions" ng-model="filteredWaitingTasks" class="panel-body tasklist dark list-unstyled">
                         <li ng-repeat="task in filteredWaitingTasks" class="task panel" ng-class=" { 'task-low' : task.priority === 0, 'task-medium' : task.priority === 1, 'task-high' : task.priority === 2, 'task-private': task.sensitivity === 2 }"
                             ng-dblclick="editTask(task)">
                             <header class="panel-heading">
@@ -250,16 +250,16 @@
             <!-- waiting lane -->
 
             <!-- completed lane -->
-            <div ng-if="( config.COMPLETED_FOLDER.ACTIVE )" class="tasklane col-md-3 col-sm-4 col-xs-6" ng-class=" { 'col-lg-100' : numfolders === 1, 'col-lg-50' : numfolders === 2, 'col-lg-33' : numfolders === 3, 'col-lg-25': numfolders === 4, 'col-lg-20': numfolders === 5 }">
-                <div class="panel panel-default">
-                    <header class="lane-header">
+            <div ng-if="( config.COMPLETED_FOLDER.ACTIVE )" class="tasklane col-md-3 col-sm-4 col-xs-6 dark" ng-class=" { 'col-lg-100' : numfolders === 1, 'col-lg-50' : numfolders === 2, 'col-lg-33' : numfolders === 3, 'col-lg-25': numfolders === 4, 'col-lg-20': numfolders === 5 }">
+                <div class="panel panel-default dark">
+                    <header class="lane-header dark">
                         <h5>{{ config.COMPLETED_FOLDER.TITLE }}
                             <span class="pull-right">
                                 <span class="label label-info">{{ completedTasks.length }}</span>
                             </span>
                         </h5>
                     </header>
-                    <ul id="completedList" ui-sortable="sortableOptions" ng-model="completedTasks" class="panel-body tasklist list-unstyled">
+                    <ul id="completedList" ui-sortable="sortableOptions" ng-model="completedTasks" class="panel-body tasklist dark list-unstyled">
                         <li ng-repeat="task in filteredCompletedTasks | filter:search" class="task panel task-completed" ng-dblclick="editTask(task)">
                             <header class="panel-heading">
                                 {{ task.subject }}
