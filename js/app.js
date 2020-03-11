@@ -236,7 +236,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
         var count = tasks.Count;
         for (i = 1; i <= count; i++) {
             var task = tasks(i);
-            
+
             if ($scope.config.AUTO_UPDATE) {
                 // bind to taskitem AfterWrite event on outlook and reload the page after the task is saved
                 eval("function task::AfterWrite (bStat) {if (!$scope.dragged) {window.location.reload();} return true;}");
@@ -966,7 +966,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
         };
         // create a new task item object in outlook
         var taskitem = tasksfolder.Items.Add();
-        
+
         taskitem.Status = newstatus;
 
         // add default task template to the task body
@@ -1252,8 +1252,8 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
                 "ACTION": "ARCHIVE"
             },
             "AUTO_UPDATE": true,
-            "AUTO_START_TASKS": false
-
+            "AUTO_START_TASKS": false,
+            "DARK_MODE": false
         };
     }
 });
