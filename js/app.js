@@ -93,10 +93,10 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
                 // locate the target folder in outlook
                 // ui.item.sortable.droptarget[0].id represents the id of the target list
                 if (ui.item.sortable.droptarget) { // check if it is dropped on a valid target
-                    if (   ($scope.config.INPROGRESS_FOLDER.LIMIT !== 0
-                            && e.target.id !== 'inprogressList'
-                            && ui.item.sortable.droptarget.attr('id') === 'inprogressList'
-                            && $scope.inprogressTasks.length > $scope.config.INPROGRESS_FOLDER.LIMIT)
+                    if (($scope.config.INPROGRESS_FOLDER.LIMIT !== 0
+                        && e.target.id !== 'inprogressList'
+                        && ui.item.sortable.droptarget.attr('id') === 'inprogressList'
+                        && $scope.inprogressTasks.length > $scope.config.INPROGRESS_FOLDER.LIMIT)
                         || ($scope.config.NEXT_FOLDER.LIMIT !== 0
                             && e.target.id !== 'nextList'
                             && ui.item.sortable.droptarget.attr('id') === 'nextList'
@@ -107,60 +107,61 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
                             && $scope.waitingTasks.length > $scope.config.WAITING_FOLDER.LIMIT)) {
                         $scope.initTasks();
                         ui.item.sortable.cancel();
-                } else {
-                    switch (ui.item.sortable.droptarget[0].id) {
-                        case 'backlogList':
-                            var tasksfolder = getOutlookFolder($scope.config.BACKLOG_FOLDER.NAME);
-                            var newstatus = $scope.config.STATUS.DEFERRED.VALUE;
-                            break;
-                        case 'nextList':
-                            var tasksfolder = getOutlookFolder($scope.config.NEXT_FOLDER.NAME);
-                            var newstatus = $scope.config.STATUS.NOT_STARTED.VALUE;
-                            break;
-                        case 'inprogressList':
-                            var tasksfolder = getOutlookFolder($scope.config.INPROGRESS_FOLDER.NAME);
-                            var newstatus = $scope.config.STATUS.IN_PROGRESS.VALUE;
-                            break;
-                        case 'waitingList':
-                            var tasksfolder = getOutlookFolder($scope.config.WAITING_FOLDER.NAME);
-                            var newstatus = $scope.config.STATUS.WAITING.VALUE;
-                            break;
-                        case 'completedList':
-                            var tasksfolder = getOutlookFolder($scope.config.COMPLETED_FOLDER.NAME);
-                            var newstatus = $scope.config.STATUS.COMPLETE.VALUE;
-                            break;
-                    };
+                    } else {
+                        switch (ui.item.sortable.droptarget[0].id) {
+                            case 'backlogList':
+                                var tasksfolder = getOutlookFolder($scope.config.BACKLOG_FOLDER.NAME);
+                                var newstatus = $scope.config.STATUS.DEFERRED.VALUE;
+                                break;
+                            case 'nextList':
+                                var tasksfolder = getOutlookFolder($scope.config.NEXT_FOLDER.NAME);
+                                var newstatus = $scope.config.STATUS.NOT_STARTED.VALUE;
+                                break;
+                            case 'inprogressList':
+                                var tasksfolder = getOutlookFolder($scope.config.INPROGRESS_FOLDER.NAME);
+                                var newstatus = $scope.config.STATUS.IN_PROGRESS.VALUE;
+                                break;
+                            case 'waitingList':
+                                var tasksfolder = getOutlookFolder($scope.config.WAITING_FOLDER.NAME);
+                                var newstatus = $scope.config.STATUS.WAITING.VALUE;
+                                break;
+                            case 'completedList':
+                                var tasksfolder = getOutlookFolder($scope.config.COMPLETED_FOLDER.NAME);
+                                var newstatus = $scope.config.STATUS.COMPLETE.VALUE;
+                                break;
+                        };
 
-                    // locate the task in outlook namespace by using unique entry id
-                    var taskitem = outlookNS.GetItemFromID(ui.item.sortable.model.entryID);
-                    var itemChanged = false;
+                        // locate the task in outlook namespace by using unique entry id
+                        var taskitem = outlookNS.GetItemFromID(ui.item.sortable.model.entryID);
+                        var itemChanged = false;
 
-                    // set new status, if different
-                    if (taskitem.Status != newstatus) {
-                        $scope.dragged = true;
-                        taskitem.Status = newstatus;
-                        taskitem.Save();
-                        itemChanged = true;
-                        ui.item.sortable.model.status = taskStatus(newstatus);
-                        ui.item.sortable.model.completeddate = new Date(taskitem.DateCompleted)
-                        $scope.dragged = false;
+                        // set new status, if different
+                        if (taskitem.Status != newstatus) {
+                            $scope.dragged = true;
+                            taskitem.Status = newstatus;
+                            taskitem.Save();
+                            itemChanged = true;
+                            ui.item.sortable.model.status = taskStatus(newstatus);
+                            ui.item.sortable.model.completeddate = new Date(taskitem.DateCompleted)
+                            $scope.dragged = false;
+                        }
+
+                        // ensure the task is not moving into same folder
+                        if (taskitem.Parent.Name != tasksfolder.Name) {
+                            // move the task item
+                            taskitem = taskitem.Move(tasksfolder);
+                            itemChanged = true;
+
+                            // update entryID with new one (entryIDs get changed after move)
+                            // https://msdn.microsoft.com/en-us/library/office/ff868618.aspx
+                            ui.item.sortable.model.entryID = taskitem.EntryID;
+                        }
+
+                        if (itemChanged) {
+                            $scope.initTasks();
+                        }
                     }
-
-                    // ensure the task is not moving into same folder
-                    if (taskitem.Parent.Name != tasksfolder.Name) {
-                        // move the task item
-                        taskitem = taskitem.Move(tasksfolder);
-                        itemChanged = true;
-
-                        // update entryID with new one (entryIDs get changed after move)
-                        // https://msdn.microsoft.com/en-us/library/office/ff868618.aspx
-                        ui.item.sortable.model.entryID = taskitem.EntryID;
-                    }
-
-                    if (itemChanged) {
-                        $scope.initTasks();
-                    }
-                }}
+                }
             }
         };
 
@@ -236,13 +237,13 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
         var count = tasks.Count;
         for (i = 1; i <= count; i++) {
             var task = tasks(i);
-            
+
             if ($scope.config.AUTO_UPDATE) {
                 // bind to taskitem AfterWrite event on outlook and reload the page after the task is saved
                 eval("function task::AfterWrite (bStat) {if (!$scope.dragged) {window.location.reload();} return true;}");
             };
 
-            switch(task.Class) {
+            switch (task.Class) {
                 // Task object
                 case 48:
                     if (task.Status == folderStatus) {
@@ -389,7 +390,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
             return $scope.config.DEFAULT_FOOTER_COLOR;
         }
         else {
-            return colorArray[i-1];
+            return colorArray[i - 1];
         }
     }
 
@@ -532,7 +533,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
                 stateItem.Body = JSON.stringify(state);
                 stateItem.Save();
             }
-            catch(err) {
+            catch (err) {
                 // In case of conflict, just delete the old conflicted settings
                 if (stateItem.IsConflict) {
                     stateItem.Delete();
@@ -540,7 +541,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
                 }
                 else {
                     alert(err.message)
-                    throw(err)
+                    throw (err)
                 }
             }
         }
@@ -560,16 +561,16 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
             configItem.Body = JSON.stringify($scope.config, null, 2);
             configItem.Save();
         }
-        catch(err) {
+        catch (err) {
             if (configItem.IsConflict) {
                 alert("The configuration could not be saved. There seems to be a modification " +
-                      "conflict with the configuration object in Outlook. Look for an entry called \'" +
-                      $scope.configName + "\' in Outlook's Journal folder and resolve the conflict, then try again.")
+                    "conflict with the configuration object in Outlook. Look for an entry called \'" +
+                    $scope.configName + "\' in Outlook's Journal folder and resolve the conflict, then try again.")
             }
             else {
                 alert(err.message)
             }
-            throw(err)
+            throw (err)
         }
     }
 
@@ -590,23 +591,23 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
                 try {
                     var stateText = stateItem.Body;
                 }
-                catch(err) {
+                catch (err) {
                     if (stateItem.IsConflict) {
                         var deleteState = confirm("Modification conflict found. " +
-                                                  "Delete saved filter settings " +
-                                                  "(KanbanState) to solve it?")
+                            "Delete saved filter settings " +
+                            "(KanbanState) to solve it?")
                         if (deleteState) {
                             stateItem.Delete();
                         }
                         else {
                             alert("To solve the modification conflict manually, look for an entry called " +
-                                  "\'KanbanState\' in Outlook's Journal folder and double click on it")
+                                "\'KanbanState\' in Outlook's Journal folder and double click on it")
                         }
                         var stateText = "";
                     }
                     else {
                         alert(err.message)
-                        throw(err)
+                        throw (err)
                     }
                 }
 
@@ -615,7 +616,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
                     try {
                         state = JSON.parse(stateText);
                     }
-                    catch(err) {
+                    catch (err) {
                         alert("Deleting saved filter settings (KanbanState) due to JSON syntax error")
                         stateItem.Delete();
                     }
@@ -638,16 +639,16 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
             try {
                 var configText = configItem.Body;
             }
-            catch(err) {
+            catch (err) {
                 if (configItem.IsConflict) {
                     alert("The configuration could not be loaded. There seems to be a modification " +
-                          "conflict with the configuration object in Outlook. Look for an entry called \'" +
-                          + $scope.configName + "\' in Outlook's Journal folder and resolve the conflict, then try again.")
+                        "conflict with the configuration object in Outlook. Look for an entry called \'" +
+                        + $scope.configName + "\' in Outlook's Journal folder and resolve the conflict, then try again.")
                 }
                 else {
                     alert(err.message)
                 }
-                throw(err)
+                throw (err)
             }
 
             // Parse
@@ -655,7 +656,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
                 try {
                     $scope.config = JSON.parse(JSON.minify(configText));
                 }
-                catch(err) {
+                catch (err) {
                     alert("Parsing of the JSON structure failed. Please check for syntax errors.");
                     $scope.editConfig();
                 }
@@ -765,7 +766,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
             mailItem.Subject += $scope.search;
             mailItem.Subject += "\" ";
         }
-        mailItem.Subject += today.toISOString().substr(0,10);
+        mailItem.Subject += today.toISOString().substr(0, 10);
         mailItem.BodyFormat = 2;
 
         mailBody = "<style>";
@@ -966,7 +967,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
         };
         // create a new task item object in outlook
         var taskitem = tasksfolder.Items.Add();
-        
+
         taskitem.Status = newstatus;
 
         // add default task template to the task body
@@ -1052,19 +1053,17 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
     // returns class based on the result
     $scope.isOverdue = function (duedate, startdate) {
         var today = new Date().setHours(0, 0, 0, 0);
-        if (typeof(duedate) !== 'undefined' && duedate.getYear() != 2601) {
+        if (typeof (duedate) !== 'undefined' && duedate.getYear() != 2601) {
             var duedateobj = new Date(duedate).setHours(0, 0, 0, 0);
         }
-        else
-        {
+        else {
             var duedateobj = today + 1;
         }
-        if (typeof(startdate) !== 'undefined' && startdate.getYear() != 2601) {
+        if (typeof (startdate) !== 'undefined' && startdate.getYear() != 2601) {
 
             var startdateobj = new Date(startdate).setHours(0, 0, 0, 0);
         }
-        else
-        {
+        else {
             var startdateobj = today - 1;
         }
         return { 'task-overdue': duedateobj < today, 'task-today': duedateobj == today, 'task-notstarted': startdateobj > today };
@@ -1074,15 +1073,15 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
         if ($scope.useCategoryColorFooters) {
             if ((categories !== '') && $scope.useCategoryColors) {
                 // Copy category style
-                if (categories.length == 1) {
-                    return categories[0].style;
-                }
+                // if (categories.length == 1) {
+                return categories[0].style;
+                // }
                 // Make multi-category tasks light gray
-                else {
-                    var footerColor = $scope.config.DEFAULT_FOOTER_COLOR;
-                    return { "background-color": footerColor,
-                             color: getContrastYIQ(footerColor) };
-                }
+                // else {
+                //     var footerColor = $scope.config.DEFAULT_FOOTER_COLOR;
+                //     return { "background-color": footerColor,
+                //              color: getContrastYIQ(footerColor) };
+                // }
             }
         }
         return;
