@@ -31,6 +31,21 @@ There are 2 ways to use the taskboard:
 ### Print status reports
 ![Status report](https://user-images.githubusercontent.com/9609820/55243657-f2b6e300-523f-11e9-969c-dbdebf350f57.png)
 
+### Checklists in the task excerpt
+You can add a checklist to your task, which will be shown in the excerpt in the taskboard like this:
+
+![Checklist](https://user-images.githubusercontent.com/1270412/126763301-8b464632-b8f5-458f-a8a6-9be753761070.PNG)
+
+To add a checkbox, add a `[]/[ ]` or `[x]/[X]` for an unchecked or a checked box, respectively, at the beginning of the line, e.g. for the example above:
+
+```
+[ ] Subtask 1
+[X] Subtask 2
+[ ] Subtask 3
+```
+
+When checking or unchecking a box, the task's description will be updated accordingly.
+
 ### Supported platforms 
 Tested with Outlook 2013 and 2016 running on Windows 7/8.1/10.
 

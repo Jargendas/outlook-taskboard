@@ -81,8 +81,8 @@
                                 <span ng-show="task.reminderSet" ng-class="isOverdue(task.duedate,task.startdate)" class="pull-right">(Reminder: {{ task.reminderTime | date:(config.DATE_FORMAT + " " + config.TIME_FORMAT) }}) </span>
                             </header>
                             <div class="panel-body">
-                                <span ng-if=" ( config.EXCERPT_LINEBREAKS ) " ng-bind-html="trust(task.notes)"></span>
-                                <span ng-if=" ( !config.EXCERPT_LINEBREAKS ) " ng-bind="task.notes"></span>
+                                <span ng-if=" ( config.EXCERPT_PARSE ) " ng-bind-html="trust(task.notes)"></span>
+                                <span ng-if=" ( !config.EXCERPT_PARSE ) " ng-bind="task.notes"></span>
                             </div>
                             <footer class="text-right" ng-style="getFooterStyle(task.categories)">
                                 <div ng-if="(task.categories != '')" class="pull-left"><span class="glyphicon glyphicon-tag"></span>
@@ -128,8 +128,8 @@
                                 <span ng-show="task.reminderSet" ng-class="isOverdue(task.duedate,task.startdate)" class="pull-right">(Reminder: {{ task.reminderTime | date:(config.DATE_FORMAT + " " + config.TIME_FORMAT) }}) </span>
                             </header>
                             <div class="panel-body">
-                                <span ng-if=" ( config.EXCERPT_LINEBREAKS ) " ng-bind-html="trust(task.notes)"></span>
-                                <span ng-if=" ( !config.EXCERPT_LINEBREAKS ) " ng-bind="task.notes"></span>
+                                <span ng-if=" ( config.EXCERPT_PARSE ) " ng-bind-html="trust(task.notes)"></span>
+                                <span ng-if=" ( !config.EXCERPT_PARSE ) " ng-bind="task.notes"></span>
                             </div>
                             <footer class="text-right" ng-style="getFooterStyle(task.categories)">
                                 <div ng-if="(task.categories != '')" class="pull-left"><span class="glyphicon glyphicon-tag"></span>
@@ -175,8 +175,8 @@
                                 <!-- <span ng-show="( config.INPROGRESS_FOLDER.DISPLAY_PROPERTIES.OWNER )" class="pull-right"><span class="glyphicon glyphicon-user"></span> {{ task.owner }} </span> -->
                             </header>
                             <div class="panel-body">
-                                <span ng-if=" ( config.EXCERPT_LINEBREAKS ) " ng-bind-html="trust(task.notes)"></span>
-                                <span ng-if=" ( !config.EXCERPT_LINEBREAKS ) " ng-bind="task.notes"></span>
+                                <span ng-if=" ( config.EXCERPT_PARSE ) " ng-bind-html="trust(task.notes)"></span>
+                                <span ng-if=" ( !config.EXCERPT_PARSE ) " ng-bind="task.notes"></span>
                             </div>
                             <footer class="text-right" ng-style="getFooterStyle(task.categories)">
                                 <div ng-if="(task.categories != '')" class="pull-left"><span class="glyphicon glyphicon-tag"></span>
@@ -224,8 +224,8 @@
                                 <span ng-show="task.reminderSet" ng-class="isOverdue(task.duedate,task.startdate)" class="pull-right">(Reminder: {{ task.reminderTime | date:(config.DATE_FORMAT + " " + config.TIME_FORMAT) }}) </span>
                             </header>
                             <div class="panel-body">
-                                <span ng-if=" ( config.EXCERPT_LINEBREAKS ) " ng-bind-html="trust(task.notes)"></span>
-                                <span ng-if=" ( !config.EXCERPT_LINEBREAKS ) " ng-bind="task.notes"></span>
+                                <span ng-if=" ( config.EXCERPT_PARSE ) " ng-bind-html="trust(task.notes)"></span>
+                                <span ng-if=" ( !config.EXCERPT_PARSE ) " ng-bind="task.notes"></span>
                             </div>
                             <footer class="text-right" ng-style="getFooterStyle(task.categories)">
                                 <div ng-if="(task.categories != '')" class="pull-left"><span class="glyphicon glyphicon-tag"></span>
@@ -266,8 +266,8 @@
                                 <span class="pull-right">(Completed: {{ task.completeddate | date:config.DATE_FORMAT }}) </span>
                             </header>
                             <div class="panel-body">
-                                <span ng-if=" ( config.EXCERPT_LINEBREAKS ) " ng-bind-html="trust(task.notes)"></span>
-                                <span ng-if=" ( !config.EXCERPT_LINEBREAKS ) " ng-bind="task.notes"></span>
+                                <span ng-if=" ( config.EXCERPT_PARSE ) " ng-bind-html="trust(task.notes)"></span>
+                                <span ng-if=" ( !config.EXCERPT_PARSE ) " ng-bind="task.notes"></span>
                             </div>
                             <footer class="text-right" ng-style="getFooterStyle(task.categories)">
                                 <div ng-if="(task.categories != '')" class="pull-left"><span class="glyphicon glyphicon-tag"></span>

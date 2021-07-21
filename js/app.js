@@ -42,6 +42,28 @@ function serializer(replacer, cycleReplacer) {
     }
 }
 
+// Checks or unchecks a given checkbox in a task
+function checkItem(checkBox, taskID, checkIdx) {
+
+    // Get the text of from the task
+    var taskItem = outlookNS.GetItemFromID(taskID);
+    var str = taskItem.Body;
+
+    var index = 0;
+    str = str.replace(/\[( |X|x)?\] */g, function (p1) { // Find all checkbox occurences
+        if (index++ == checkIdx) {
+            return checkBox.checked ? '\[X\] ' : '\[ \] '; // If the given index is reached, replace it with the checked or unchecked counterpart
+        } else {
+            return p1; // Otherwise, leave it as is
+        }
+    });
+    str = str.substring(2); // Remove temporary new line
+
+    // Save the changes
+    taskItem.Body = str;
+    taskItem.save();
+}
+
 tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
 
     // DeepDiff.observableDiff(def, curr, function(d) {
@@ -51,7 +73,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
     $scope.init = function (configStr) {
         $scope.configName = "KanbanConfig" + configStr;
         $scope.getConfig();
-        if ($scope.config.EXCERPT_LINEBREAKS) {
+        if ($scope.config.EXCERPT_PARSE) {
             $scope.trust = $sce.trustAsHtml;
         }
 
@@ -256,7 +278,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
                             sensitivity: task.Sensitivity,
                             categories: getCategoriesArray(task.Categories),
                             categoryNames: task.Categories,
-                            notes: taskExcerpt(task.Body, $scope.config.TASKNOTE_EXCERPT),
+                            notes: taskExcerpt(task.Body, $scope.config.TASKNOTE_EXCERPT, task.EntryID),
                             body: task.Body,
                             status: taskStatus(task.Status),
                             oneNoteTaskID: getUserProp(task, "OneNoteTaskID"),
@@ -285,7 +307,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
                             sensitivity: task.Sensitivity,
                             categories: getCategoriesArray(task.Categories),
                             categoryNames: task.Categories,
-                            notes: taskExcerpt(task.Body, $scope.config.TASKNOTE_EXCERPT),
+                            notes: taskExcerpt(task.Body, $scope.config.TASKNOTE_EXCERPT, task.EntryID),
                             body: task.Body,
                             status: taskStatus(flaggedMailStatus),
                             oneNoteTaskID: getUserProp(task, "OneNoteTaskID"),
@@ -741,7 +763,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
         mailBody += "<tr><td>PRIVACY_FILTER</td><td>if true, then you can use separate boards for private and publis tasks</td></tr>";
         mailBody += "<tr><td>INCLUDE_TODOS</td><td>Search the To Do folder instead of the Tasks folder. This includes flagged mails. Note that flagged mails cannot be moved across lanes as they do not have statuses.</td></tr>";
         mailBody += "<tr><td>INCLUDE_TODOS_STATUS</td><td>Choose which status ID should be assigned to tasks generated from flagged mails. These cannot be moved across lanes.</td></tr>";
-        mailBody += "<tr><td>EXCERPT_LINEBREAKS</td><td>If true, display line breaks from task bodies in task excerpts. This introduces a <b>potential vulnerability</b> to XSS attacks! However, this is probably not that relevant with personal Outlook tasks.</td></tr>";
+        mailBody += "<tr><td>EXCERPT_PARSE</td><td>If true, line breaks and checkboxes from the task body are parsed and displayed in the task excerpt. Other HTML content in the excerpt is displayed as well. This introduces a <b>potential vulnerability</b> to XSS attacks! However, this is probably not that relevant with personal Outlook tasks.</td></tr>";
         mailBody += "<tr><td>STATUS</td><td>The values and descriptions for the task statuses. The text can be changed for the status report</td></tr>";
         mailBody += "<tr><td>COMPLETED</td><td>Define what to do with completed tasks after x days: NONE, HIDE, ARCHIVE or DELETE</td></tr>";
         mailBody += "<tr><td>AUTO_UPDATE</td><td>if true, then the board is updated immediately after adding or deleting tasks</td></tr>";
@@ -794,7 +816,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
                 if (tasks[i].priority == 2) { mailBody += "<font color=red> [H]</font>"; }
                 if (tasks[i].priority == 0) { mailBody += "<font color=gray> [L]</font>"; }
                 if (moment(tasks[i].duedate).isValid && moment(tasks[i].duedate).year() != 4501) { mailBody += " [Due: " + moment(tasks[i].duedate).format("DD-MMM") + "]"; }
-                if (taskExcerpt(tasks[i].body, 10000)) { mailBody += "<br>" + "<font color=gray>" + taskExcerpt(tasks[i].body, 10000) + "</font>"; }
+                if (taskExcerpt(tasks[i].body, 10000, tasks[i].entryID)) { mailBody += "<br>" + "<font color=gray>" + taskExcerpt(tasks[i].body, 10000, tasks[i].entryID) + "</font>"; }
                 mailBody += "</li>";
             }
             mailBody += "</ul>";
@@ -820,7 +842,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
                 if (tasks[i].priority == 2) { mailBody += "<font color=red> [H]</font>"; }
                 if (tasks[i].priority == 0) { mailBody += "<font color=gray> [L]</font>"; }
                 if (moment(tasks[i].duedate).isValid && moment(tasks[i].duedate).year() != 4501) { mailBody += " [Due: " + moment(tasks[i].duedate).format("DD-MMM") + "]"; }
-                if (taskExcerpt(tasks[i].body, 10000)) { mailBody += "<br>" + "<font color=gray>" + taskExcerpt(tasks[i].body, 10000) + "</font>"; }
+                if (taskExcerpt(tasks[i].body, 10000, tasks[i].entryID)) { mailBody += "<br>" + "<font color=gray>" + taskExcerpt(tasks[i].body, 10000, tasks[i].entryID) + "</font>"; }
                 mailBody += "</li>";
             }
             mailBody += "</ul>";
@@ -846,7 +868,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
                 if (tasks[i].priority == 2) { mailBody += "<font color=red> [H]</font>"; }
                 if (tasks[i].priority == 0) { mailBody += "<font color=gray> [L]</font>"; }
                 if (moment(tasks[i].duedate).isValid && moment(tasks[i].duedate).year() != 4501) { mailBody += " [Due: " + moment(tasks[i].duedate).format("DD-MMM") + "]"; }
-                if (taskExcerpt(tasks[i].body, 10000)) { mailBody += "<br>" + "<font color=gray>" + taskExcerpt(tasks[i].body, 10000) + "</font>"; }
+                if (taskExcerpt(tasks[i].body, 10000, tasks[i].entryID)) { mailBody += "<br>" + "<font color=gray>" + taskExcerpt(tasks[i].body, 10000, tasks[i].entryID) + "</font>"; }
                 mailBody += "</li>";
             }
             mailBody += "</ul>";
@@ -872,7 +894,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
                 if (tasks[i].priority == 2) { mailBody += "<font color=red> [H]</font>"; }
                 if (tasks[i].priority == 0) { mailBody += "<font color=gray> [L]</font>"; }
                 if (moment(tasks[i].duedate).isValid && moment(tasks[i].duedate).year() != 4501) { mailBody += " [Due: " + moment(tasks[i].duedate).format("DD-MMM") + "]"; }
-                if (taskExcerpt(tasks[i].body, 10000)) { mailBody += "<br>" + "<font color=gray>" + taskExcerpt(tasks[i].body, 10000) + "</font>"; }
+                if (taskExcerpt(tasks[i].body, 10000, tasks[i].entryID)) { mailBody += "<br>" + "<font color=gray>" + taskExcerpt(tasks[i].body, 10000, tasks[i].entryID) + "</font>"; }
                 mailBody += "</li>";
             }
             mailBody += "</ul>";
@@ -898,7 +920,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
                 if (tasks[i].priority == 2) { mailBody += "<font color=red> [H]</font>"; }
                 if (tasks[i].priority == 0) { mailBody += "<font color=gray> [L]</font>"; }
                 if (moment(tasks[i].duedate).isValid && moment(tasks[i].duedate).year() != 4501) { mailBody += " [Due: " + moment(tasks[i].duedate).format("DD-MMM") + "]"; }
-                if (taskExcerpt(tasks[i].body, 10000)) { mailBody += "<br>" + "<font color=gray>" + taskExcerpt(tasks[i].body, 10000) + "</font>"; }
+                if (taskExcerpt(tasks[i].body, 10000, tasks[i].entryID)) { mailBody += "<br>" + "<font color=gray>" + taskExcerpt(tasks[i].body, 10000, tasks[i].entryID) + "</font>"; }
                 mailBody += "</li>";
             }
             mailBody += "</ul>";
@@ -917,19 +939,40 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
     // grabs the summary part of the task until the first '###' text
     // shortens the string by number of chars
     // tries not to split words and adds ... at the end to give excerpt effect
-    var taskExcerpt = function (str, limit) {
+    var taskExcerpt = function (str, limit, taskID) {
+        // Use everything up to the first ### for the excerpt
         if (str.indexOf('\r\n### ') > 0) {
             str = str.substring(0, str.indexOf('\r\n### '));
         }
-        // // remove empty lines
-        // str = str.replace(/^(?=\n)$|^\s*|\s*$|\n\n+/gm, '');
+
+        // Shorten it to the set limit
         if (str.length > limit) {
             str = str.substring(0, str.lastIndexOf(' ', limit));
-            if ($scope.config.EXCERPT_LINEBREAKS) {
-                str = str.replace(/\r\n/g, '<br>');
-            }
             if (limit != 0) { str = str + " [...]" }
         };
+        
+        if ($scope.config.EXCERPT_PARSE) {
+            var index = 0;
+            // Replace all occurences of [] and [X]/[x] with checkboxes
+            str = str.replace(/\[( |X|x)?\] */g, function (p1) {
+                var returnString = '<input type="checkbox" onclick="checkItem(this, \'' + taskID + '\', ' + index++ + ');"';
+                if ((p1.indexOf('X') !== -1) || (p1.indexOf('x') !== -1)) {
+                    returnString += ' checked';
+                }
+                returnString += '>&nbsp;';
+                return  returnString;
+            });
+
+            // Remove empty lines and spaces at beginning and end
+            str = str.trim();
+
+            // Add linebreaks
+            str = str.replace(/\r\n/g, '<br>');
+        } else {
+            // Remove empty lines and spaces at beginning and end
+            str = str.trim();
+        }
+
         return str;
     };
 
@@ -1224,7 +1267,7 @@ tbApp.controller('taskboardController', function ($scope, $filter, $sce) {
             "PRIVACY_FILTER": true,
             "INCLUDE_TODOS": false,
             "INCLUDE_TODOS_STATUS": 0,
-            "EXCERPT_LINEBREAKS": false,
+            "EXCERPT_PARSE": true,
             "STATUS": {
                 "NOT_STARTED": {
                     "VALUE": 0,
