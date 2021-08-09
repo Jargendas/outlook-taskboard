@@ -57,7 +57,6 @@ function checkItem(checkBox, taskID, checkIdx) {
             return p1; // Otherwise, leave it as is
         }
     });
-    str = str.substring(2); // Remove temporary new line
 
     // Save the changes
     taskItem.Body = str;
